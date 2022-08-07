@@ -1,0 +1,6 @@
+[submodule "minisat"]
+	path = minisat
+	url = https://github.com/niklasso/minisat.git
+[submodule "riss-solver"]
+	path = riss-solver
+	url = https://github.com/nmanthey/riss-solver.git
