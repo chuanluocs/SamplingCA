@@ -66,6 +66,8 @@ The output PCA consists of multiple lines with each line representing a valid co
 
 The command above calls *SamplingCA* to solve the instance `cnf_instances/XSEngine.cnf` by setting the random seed to 1 and the number of candidate test cases per iteration round of the sampling phase to 100. The generated PCA will be saved in `./XSEngine.cnf_testcase_set.txt`. 
 
+For a simple case study, users may check the `examples/` directory. 
+
 ## Commands for Reproducing the Experimental Results
 
 ### Experiments for RQ1 and RQ2
