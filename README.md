@@ -127,6 +127,6 @@ The directory `experimental_results` contains three `.csv` files for presenting 
 - Chuan Luo (<chuanluophd@outlook.com>)
 - Qiyuan Zhao (<zqy1018@hotmail.com>)
 
-## Related Paper
+## Reference
 
-Chuan Luo, Qiyuan Zhao, Shaowei Cai, Hongyu Zhang, Chunming Hu. *SamplingCA: Effective and Efficient Sampling-based Pairwise Testing for Highly Configurable Software Systems.* To appear in Proceedings of ESEC/FSE 2022. 
+Chuan Luo, Qiyuan Zhao, Shaowei Cai, Hongyu Zhang, Chunming Hu. *SamplingCA: Effective and Efficient Sampling-based Pairwise Testing for Highly Configurable Software Systems.* Proceedings of ESEC/FSE 2022: 1185-1197, 2022. 
