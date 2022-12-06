@@ -196,10 +196,6 @@ bool ParseArgument(int argc, char **argv, Argument &argu)
 		}
 	}
 
-	int pos = argu.input_cnf_path.find_last_of( '/' );
-    string cnf_file_name = argu.input_cnf_path.substr(pos + 1);
-	cnf_file_name.replace(cnf_file_name.find(".cnf"), 4, "");
-
 	if(argu.flag_input_cnf_path) return true;
 	else return false;
 }

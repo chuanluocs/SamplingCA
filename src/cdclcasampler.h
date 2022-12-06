@@ -10,10 +10,12 @@
 #include <random>
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
 
 using std::vector;
 using std::pair;
 using std::queue;
+using std::ifstream;
 
 class SimpleBitSet {
 public:
@@ -22,6 +24,7 @@ public:
     }
     SimpleBitSet(size_t _siz): siz(_siz), cnt(0ll){
         cap = (_siz + 31) >> 5;
+        if (cap == 0) cap = 1;
         arr = new uint32_t[cap]{0};
     }
     SimpleBitSet(const SimpleBitSet& bs): siz(bs.siz), cap(bs.cap), cnt(bs.cnt){
@@ -279,7 +282,9 @@ private:
 
     void get_cadical_solution(vector<int>& tc);
 
+    void read_cnf_header(ifstream& ifs, int& nvar, int& nclauses);
     bool read_cnf();
+    bool check_no_clauses();
     vector<vector<int> > clauses;
     vector<vector<int> > pos_in_cls;
     vector<vector<int> > neg_in_cls;

@@ -5,7 +5,6 @@
 #include <chrono>
 
 #include <iostream>
-#include <fstream>
 #include <sstream>
 
 using namespace std;
@@ -56,7 +55,10 @@ void CDCLCASampler::SetDefaultPara()
 
     int pos = cnf_file_path_.find_last_of('/');
     cnf_instance_name_ = cnf_file_path_.substr(pos + 1);
-    cnf_instance_name_.replace(cnf_instance_name_.find(".cnf"), 4, "");
+    size_t suffix_pos = cnf_instance_name_.rfind(".cnf");
+    if (suffix_pos != string::npos){
+        cnf_instance_name_.replace(suffix_pos, 4, "");
+    }
 
     flag_reduced_cnf_as_temp_ = true;
     reduced_cnf_file_path_ = "/tmp/" + get_random_prefix() + "_reduced.cnf";
@@ -291,7 +293,11 @@ void CDCLCASampler::InitPbOCCSATSolver()
 
 void CDCLCASampler::Init()
 {
-    (this->*p_reduce_cnf_)();
+    if (!check_no_clauses()){
+        (this->*p_reduce_cnf_)();
+    } else {
+        flag_use_cnf_reduction_ = false;
+    }
     
     InitPbOCCSATSolver();
     num_var_ = pbo_solver_->get_var_num();
@@ -733,27 +739,40 @@ void CDCLCASampler::clear_final()
     cout << "c 2-tuple coverage: " << coverage_tuple_ << endl;
 }
 
-bool CDCLCASampler::read_cnf(){
+void CDCLCASampler::read_cnf_header(ifstream& ifs, int& nvar, int& nclauses){
     string line;
     istringstream iss;
-
-	ifstream fin(cnf_file_path_.c_str());
-	if (!fin.is_open()) return false;
-
-	while (getline(fin, line))
-	{
-		if (line.substr(0, 1) == "c")
-			continue;
-		else if (line.substr(0, 1) == "p")
-		{
+    
+    while (getline(ifs, line)){
+        if (line.substr(0, 1) == "c")
+            continue;
+        else if (line.substr(0, 1) == "p"){
             string tempstr1, tempstr2;
             iss.clear();
             iss.str(line);
             iss.seekg(0, ios::beg);
-			iss >> tempstr1 >> tempstr2 >> num_var_ >> num_clauses_;
-			break;
-		}
-	}
+            iss >> tempstr1 >> tempstr2 >> nvar >> nclauses;
+            break;
+        }
+    }
+}
+
+bool CDCLCASampler::check_no_clauses(){
+    ifstream fin(cnf_file_path_.c_str());
+    if (!fin.is_open()) return true;
+
+    int num_var_original, num_clauses_original;
+    read_cnf_header(fin, num_var_original, num_clauses_original);
+
+    fin.close();
+    return num_clauses_original <= 0;
+}
+
+bool CDCLCASampler::read_cnf(){
+    ifstream fin(cnf_file_path_.c_str());
+    if (!fin.is_open()) return false;
+
+    read_cnf_header(fin, num_var_, num_clauses_);
 
     if (num_var_ < 0 || num_clauses_ < 0){
         fin.close();
@@ -765,28 +784,28 @@ bool CDCLCASampler::read_cnf(){
     clauses.resize(num_clauses_);
     as_backbone.resize(num_var_, -1);
 
-	for (int c = 0; c < num_clauses_; ++c)
-	{
+    for (int c = 0; c < num_clauses_; ++c)
+    {
         int cur_lit;
-		fin >> cur_lit;
-		while (cur_lit != 0)
-		{
-			int v = abs(cur_lit);
+        fin >> cur_lit;
+        while (cur_lit != 0)
+        {
+            int v = abs(cur_lit);
             if (cur_lit > 0) pos_in_cls[v].push_back(c);
             else neg_in_cls[v].push_back(c);
             clauses[c].emplace_back(cur_lit);
-			fin >> cur_lit;
-		}
+            fin >> cur_lit;
+        }
 
         if ((int) clauses[c].size() == 1){
             int bv = abs(clauses[c][0]) - 1;
             as_backbone[bv] = clauses[c][0] > 0 ? 1: 0;
         }
-	}
+    }
 
-	fin.close();
+    fin.close();
 
-	return true;
+    return true;
 }
 
 void CDCLCASampler::SetUpperLimit(std::string answer_file_path){
