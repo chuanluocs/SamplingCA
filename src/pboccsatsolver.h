@@ -155,7 +155,7 @@ private:
 
 public:
 	PbOCCSATSolver();
-	PbOCCSATSolver(std::string inst_dir, int sd);
+	PbOCCSATSolver(std::string inst_dir, int sd, int reference_num_vars);
 	~PbOCCSATSolver();
 	
 	void default_algorithm_settings();
@@ -170,7 +170,7 @@ public:
 	void update(int flipvar, long long step);
 
 	void reassign_istringstream(std::istringstream &iss, std::string line);
-	bool build_instance();
+	bool build_instance(int reference_num_vars);
 	void allocate_memory(int num_vars, int num_clauses);
 	void free_memory();
 	void init();

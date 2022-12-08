@@ -288,11 +288,13 @@ void CDCLCASampler::ReduceCNF()
 
 void CDCLCASampler::InitPbOCCSATSolver()
 {
-    pbo_solver_ = new PbOCCSATSolver(cnf_file_path_, rng_.next(kMaxPbOCCSATSeed));
+    pbo_solver_ = new PbOCCSATSolver(cnf_file_path_, rng_.next(kMaxPbOCCSATSeed), num_var_);
 }
 
 void CDCLCASampler::Init()
 {
+    num_var_ = 0;
+
     if (!check_no_clauses()){
         (this->*p_reduce_cnf_)();
     } else {
@@ -300,7 +302,6 @@ void CDCLCASampler::Init()
     }
     
     InitPbOCCSATSolver();
-    num_var_ = pbo_solver_->get_var_num();
 
     read_cnf();
 
@@ -742,6 +743,7 @@ void CDCLCASampler::clear_final()
 void CDCLCASampler::read_cnf_header(ifstream& ifs, int& nvar, int& nclauses){
     string line;
     istringstream iss;
+    int this_num_var;
     
     while (getline(ifs, line)){
         if (line.substr(0, 1) == "c")
@@ -751,7 +753,9 @@ void CDCLCASampler::read_cnf_header(ifstream& ifs, int& nvar, int& nclauses){
             iss.clear();
             iss.str(line);
             iss.seekg(0, ios::beg);
-            iss >> tempstr1 >> tempstr2 >> nvar >> nclauses;
+            iss >> tempstr1 >> tempstr2 >> this_num_var >> nclauses;
+            if (nvar < this_num_var)
+                nvar = this_num_var;
             break;
         }
     }
@@ -761,8 +765,8 @@ bool CDCLCASampler::check_no_clauses(){
     ifstream fin(cnf_file_path_.c_str());
     if (!fin.is_open()) return true;
 
-    int num_var_original, num_clauses_original;
-    read_cnf_header(fin, num_var_original, num_clauses_original);
+    int num_clauses_original;
+    read_cnf_header(fin, num_var_, num_clauses_original);
 
     fin.close();
     return num_clauses_original <= 0;
@@ -774,7 +778,7 @@ bool CDCLCASampler::read_cnf(){
 
     read_cnf_header(fin, num_var_, num_clauses_);
 
-    if (num_var_ < 0 || num_clauses_ < 0){
+    if (num_var_ <= 0 || num_clauses_ < 0){
         fin.close();
         return false;
     }

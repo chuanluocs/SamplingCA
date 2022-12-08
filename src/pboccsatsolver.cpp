@@ -7,13 +7,13 @@ PbOCCSATSolver::PbOCCSATSolver()
 	version_str = "1.2.3";
 }
 
-PbOCCSATSolver::PbOCCSATSolver(string inst_dir, int sd)
+PbOCCSATSolver::PbOCCSATSolver(string inst_dir, int sd, int reference_num_vars)
 {
 	version_str = "1.2.3";
 	inst = inst_dir;
 	seed = sd;
 	default_algorithm_settings();
-	if (!build_instance())
+	if (!build_instance(reference_num_vars))
 	{
 		cout << "c" << endl;
 		cout << "c Instance File Error!" << endl;
@@ -239,7 +239,7 @@ void PbOCCSATSolver::free_memory()
 	return;
 }
 
-bool PbOCCSATSolver::build_instance()
+bool PbOCCSATSolver::build_instance(int reference_num_vars)
 {
 	string line;
 	istringstream iss;
@@ -264,6 +264,8 @@ bool PbOCCSATSolver::build_instance()
 		{
 			reassign_istringstream(iss, line);
 			iss >> tempstr1 >> tempstr2 >> num_vars >> num_clauses;
+			if (num_vars < reference_num_vars)
+				num_vars = reference_num_vars;
 			ori_num_vars = num_vars;
 			ori_num_clauses = num_clauses;
 			break;
