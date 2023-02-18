@@ -594,8 +594,8 @@ SimpleBitSet CDCLCASampler::get_gain(const vector<int>& asgn){
         }
     } else if (t_wise_ == 3){
         for (int i1 = 0; i1 < num_var_; i1++){
-            for (int i2 = 0; i2 < num_var_; i2++){
-                for (int i3 = 0; i3 < num_var_; i3++){
+            for (int i2 = i1 + 1; i2 < num_var_; i2++){
+                for (int i3 = i2 + 1; i3 < num_var_; i3++){
                     long long index_tuple = Get3TupleMapIndex(i1, asgn[i1], i2, asgn[i2], i3, asgn[i3]);
                     if (!already_t_wise.get(index_tuple)){
                         res.set(index_tuple);
@@ -605,9 +605,9 @@ SimpleBitSet CDCLCASampler::get_gain(const vector<int>& asgn){
         }
     } else if (t_wise_ == 4){
         for (int i1 = 0; i1 < num_var_; i1++){
-            for (int i2 = 0; i2 < num_var_; i2++){
-                for (int i3 = 0; i3 < num_var_; i3++){
-                    for (int i4 = 0; i4 < num_var_; i4++){
+            for (int i2 = i1 + 1; i2 < num_var_; i2++){
+                for (int i3 = i2 + 1; i3 < num_var_; i3++){
+                    for (int i4 = i3 + 1; i4 < num_var_; i4++){
                         long long index_tuple = Get4TupleMapIndex(i1, asgn[i1], i2, asgn[i2], i3, asgn[i3], i4, asgn[i4]);
                         if (!already_t_wise.get(index_tuple)){
                             res.set(index_tuple);
@@ -618,10 +618,10 @@ SimpleBitSet CDCLCASampler::get_gain(const vector<int>& asgn){
         }
     } else if (t_wise_ == 5){
         for (int i1 = 0; i1 < num_var_; i1++){
-            for (int i2 = 0; i2 < num_var_; i2++){
-                for (int i3 = 0; i3 < num_var_; i3++){
-                    for (int i4 = 0; i4 < num_var_; i4++){
-                        for (int i5 = 0; i5 < num_var_; i5++){
+            for (int i2 = i1 + 1; i2 < num_var_; i2++){
+                for (int i3 = i2 + 1; i3 < num_var_; i3++){
+                    for (int i4 = i3 + 1; i4 < num_var_; i4++){
+                        for (int i5 = i4 + 1; i5 < num_var_; i5++){
                             long long index_tuple = Get5TupleMapIndex(i1, asgn[i1], i2, asgn[i2], i3, asgn[i3], i4, asgn[i4], i5, asgn[i5]);
                             if (!already_t_wise.get(index_tuple)){
                                 res.set(index_tuple);
@@ -633,11 +633,11 @@ SimpleBitSet CDCLCASampler::get_gain(const vector<int>& asgn){
         }
     } else if (t_wise_ == 6){
         for (int i1 = 0; i1 < num_var_; i1++){
-            for (int i2 = 0; i2 < num_var_; i2++){
-                for (int i3 = 0; i3 < num_var_; i3++){
-                    for (int i4 = 0; i4 < num_var_; i4++){
-                        for (int i5 = 0; i5 < num_var_; i5++){
-                            for (int i6 = 0; i6 < num_var_; i6++){
+            for (int i2 = i1 + 1; i2 < num_var_; i2++){
+                for (int i3 = i2 + 1; i3 < num_var_; i3++){
+                    for (int i4 = i3 + 1; i4 < num_var_; i4++){
+                        for (int i5 = i4 + 1; i5 < num_var_; i5++){
+                            for (int i6 = i5 + 1; i6 < num_var_; i6++){
                                 long long index_tuple = Get6TupleMapIndex(i1, asgn[i1], i2, asgn[i2], i3, asgn[i3], i4, asgn[i4], i5, asgn[i5], i6, asgn[i6]);
                                 if (!already_t_wise.get(index_tuple)){
                                     res.set(index_tuple);
