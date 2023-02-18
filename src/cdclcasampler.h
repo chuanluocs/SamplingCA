@@ -167,10 +167,26 @@ public:
     void GenerateCandidateTestcaseSet();
     int SelectTestcaseFromCandidateSetByTupleNum();
 
-    long long Get2TupleMapIndex(long i, long v_i, long j, long v_j);
+    long long Get2TupleMapIndex(int i, int v_i, int j, int v_j);
 
     void Init2TupleInfo();
     void Update2TupleInfo();
+
+    // hard code everything
+    long long Get3TupleMapIndex(int i1, int v1, int i2, int v2, int i3, int v3);
+    long long Get4TupleMapIndex(int i1, int v1, int i2, int v2, int i3, int v3, int i4, int v4);
+    long long Get5TupleMapIndex(int i1, int v1, int i2, int v2, int i3, int v3, int i4, int v4, int i5, int v5);
+    long long Get6TupleMapIndex(int i1, int v1, int i2, int v2, int i3, int v3, int i4, int v4, int i5, int v5, int i6, int v6);
+    void Init3TupleInfo();
+    void Update3TupleInfo();
+    void Init4TupleInfo();
+    void Update4TupleInfo();
+    void Init5TupleInfo();
+    void Update5TupleInfo();
+    void Init6TupleInfo();
+    void Update6TupleInfo();
+
+    long long GetXTupleMapIndex(const vector<pair<int, int> >& vec);
 
     void InitPbOCCSATSolver();
 
@@ -234,9 +250,6 @@ private:
     std::vector<double> var_positive_sample_weight_;
     std::vector<double> context_aware_flip_priority_;
 
-    std::vector<int> count_each_var_positive_uncovered_;
-    std::vector<int> count_each_var_negative_uncovered_;
-
     void (CDCLCASampler::*p_init_context_aware_flip_priority_)();
     void (CDCLCASampler::*p_update_context_aware_flip_priority_)(const std::vector<int> &init_solution);
     void (CDCLCASampler::*p_init_sample_weight_)();
@@ -269,14 +282,16 @@ private:
     void (CDCLCASampler::*p_choose_final)();
     int final_strategy;
     void choose_final_plain();
-    void choose_final_random_contiguous_solving(bool simplify);
-    inline void choose_final_random_contiguous_solving_simpl(){ choose_final_random_contiguous_solving(true); }
-    inline void choose_final_random_contiguous_solving_nosimpl(){ choose_final_random_contiguous_solving(false); }
-    void choose_final_solution_modifying(bool shf);
-    inline void choose_final_solution_modifying_shuffle(){ choose_final_solution_modifying(true); }
-    inline void choose_final_solution_modifying_noshuffle(){ choose_final_solution_modifying(false); }
+    // void choose_final_random_contiguous_solving(bool simplify);
+    // inline void choose_final_random_contiguous_solving_simpl(){ choose_final_random_contiguous_solving(true); }
+    // inline void choose_final_random_contiguous_solving_nosimpl(){ choose_final_random_contiguous_solving(false); }
+    // void choose_final_solution_modifying(bool shf);
+    // inline void choose_final_solution_modifying_shuffle(){ choose_final_solution_modifying(true); }
+    // inline void choose_final_solution_modifying_noshuffle(){ choose_final_solution_modifying(false); }
 
-    void find_uncovered_tuples(bool simplify);
+    void find_uncovered_tuples_pre(int cur, bool simplify);
+    // void find_uncovered_tuples(bool simplify);
+    vector<pair<int, int> > uncovered_tuple_tmp;
     vector<vector<int> > uncovered_tuples;
     vector<vector<int> > uncovered_possible_solutions;
 
@@ -296,6 +311,34 @@ private:
     long long upperlimit;
 
     vector<int> as_backbone;
+
+    long long **combnum;
+
+    // TODO 这里的参数应该可以优化一部分，但现在先懒得弄了；暂时先用简单的查表方式计算
+
+    long long Get2Base(int n, int i, int j){
+        return (2ll * n - i - 1) * i / 2 + j - i - 1;
+    }
+
+    long long Get3Base(int n, int i1, int i2, int i3){
+        long long res = combnum[3][n] - combnum[3][n - i1];
+        return res + Get2Base(n - i1 - 1, i2 - i1 - 1, i3 - i1 - 1);
+    }
+
+    long long Get4Base(int n, int i1, int i2, int i3, int i4){
+        long long res = combnum[4][n] - combnum[4][n - i1];
+        return res + Get3Base(n - i1 - 1, i2 - i1 - 1, i3 - i1 - 1, i4 - i1 - 1);
+    }
+
+    long long Get5Base(int n, int i1, int i2, int i3, int i4, int i5){
+        long long res = combnum[5][n] - combnum[5][n - i1];
+        return res + Get4Base(n - i1 - 1, i2 - i1 - 1, i3 - i1 - 1, i4 - i1 - 1, i5 - i1 - 1);
+    }
+
+    long long Get6Base(int n, int i1, int i2, int i3, int i4, int i5, int i6){
+        long long res = combnum[6][n] - combnum[6][n - i1];
+        return res + Get5Base(n - i1 - 1, i2 - i1 - 1, i3 - i1 - 1, i4 - i1 - 1, i5 - i1 - 1, i6 - i1 - 1);
+    }
 };
 
 #endif
