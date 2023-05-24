@@ -176,7 +176,7 @@ long long CDCLCASampler::Get2TupleMapIndex(long i, long v_i, long j, long v_j)
 
 void CDCLCASampler::Init2TupleInfo()
 {
-    num_combination_all_possible_ = num_var_ * (num_var_ - 1) / 2;
+    num_combination_all_possible_ = (long long)num_var_ * (num_var_ - 1) / 2;
     num_tuple_all_possible_ = num_combination_all_possible_ * 4;
     already_t_wise = SimpleBitSet(num_tuple_all_possible_);
     count_each_var_positive_uncovered_.resize(num_var_, (num_var_ - 1) * 2);
