@@ -161,17 +161,9 @@ void CDCLCASampler::GenerateInitTestcaseCDCL()
 
 long long CDCLCASampler::Get2TupleMapIndex(long i, long v_i, long j, long v_j)
 {
-    if (i >= j)
-    {
-        cout << "c Wrong index order!" << endl;
-        return -1;
-    }
-    else
-    {
-        long long index_comb = v_j + v_i * 2;
-        long long index = index_comb * num_combination_all_possible_ + (2 * num_var_ - i - 1) * i / 2 + j - i - 1;
-        return index;
-    }
+    long long base = (v_i << 1 | v_j) * num_combination_all_possible_;
+    long long pos = (2ll * num_var_ - i - 1) * i / 2 + j - i - 1;
+    return base + pos;
 }
 
 void CDCLCASampler::Init2TupleInfo()
