@@ -13,10 +13,8 @@ Combinatorial interaction testing (CIT) is a popular testing methodology for tes
 *SamplingCA* is [publicly available on Github](https://github.com/chuanluocs/SamplingCA). To obtain *SamplingCA*, a user may use `git clone` to get a local copy of the Github repository:
 
 ```
-git clone --recursive https://github.com/chuanluocs/SamplingCA.git
+git clone https://github.com/chuanluocs/SamplingCA.git
 ```
-
-Note that *SamplingCA* is based on two git submodules: [minisat](https://github.com/niklasso/minisat) and [riss-solver](https://github.com/nmanthey/riss-solver). Therefore, we recommend users call `git clone` with the `--recursive` option in order to initialize the submodules properly, as the command above demonstrates. 
 
 ## Instructions for Building *SamplingCA*
 
@@ -56,7 +54,7 @@ Note that when running *SamplingCA*, the last lines of the console log will repo
 
 The output PCA consists of multiple lines with each line representing a valid configuration. For example, for a SUT with 3 options **x**, **y** and **z** in order, a line `0 1 0` means that **x=0, y=1, z=0** is a valid configuration. 
 
-**Tip:** When the parameter `-use_formula_simplification` is set to 1, *SamplingCA* will call `bin/coprocessor` to simplify the input during the execution. However, since `bin/coprocessor` is a precompiled binary file, it may not work on machines with specific hardware or operating systems. In this case, to reproduce the experiments precisely, we recommend users use the instances in `simplified_instances/`, which are the simplified counterparts of those in `cnf_instances/`. Alternatively, users can also build `coprocessor` from source by following the instructions in the submodule [riss-solver](https://github.com/nmanthey/riss-solver). 
+**Tip:** When the parameter `-use_formula_simplification` is set to 1, *SamplingCA* will call `bin/coprocessor` to simplify the input during the execution. However, since `bin/coprocessor` is a precompiled binary file, it may not work on machines with specific hardware or operating systems. In this case, to reproduce the experiments precisely, we recommend users use the instances in `simplified_instances/`, which are the simplified counterparts of those in `cnf_instances/`. Alternatively, users can also build `coprocessor` from source by following the instructions in [the official repository of `riss-solver`](https://github.com/nmanthey/riss-solver). 
 
 ## Example Command for Running *SamplingCA*
 
